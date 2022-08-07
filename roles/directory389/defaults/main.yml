@@ -1,0 +1,5 @@
+---
+ldap_root_pass: ldap_password
+ldap_comp: "vmtest"
+ldap_suffix: "dc={{ ldap_comp }},dc=com"
+ldap_rootdn: "cn=Manager,{{ ldap_suffix }}"

@@ -1,0 +1,60 @@
+# Create Organisation ldif file
+echo "dn: {{ ldap_suffix }}
+objectClass: dcObject
+objectClass: organization
+dc: {{ ldap_comp }}
+o : {{ ldap_comp }}" > /tmp/Organisation.ldif
+# Add the Organistion to ldif
+ldapadd -f /tmp/Organisation.ldif -D {{ ldap_rootdn }} -w {{ ldap_root_pass }}
+
+# Create an Oragnisational Unit of Groups
+echo "dn: ou=Groups,{{ ldap_suffix }}
+objectClass: organizationalUnit
+objectClass: top
+ou: Groups" > /tmp/Groups.ldif
+ldapadd -f /tmp/Groups.ldif -D {{ ldap_rootdn }} -w {{ ldap_root_pass }}
+
+# Create an Organisational Unit of People
+echo "dn: ou=People,{{ ldap_suffix }}
+objectClass: organizationalUnit
+objectClass: top
+ou: People" > /tmp/People.ldif
+ldapadd -f /tmp/People.ldif -D {{ ldap_rootdn }} -w {{ ldap_root_pass }}
+
+# Create Organisation Unit vmtestadmin posixGroup ldif file
+echo "dn: cn=vmtestadmin,ou=Groups,{{ ldap_suffix }}
+objectClass: top
+objectClass: posixGroup
+cn: vmtestadmin
+userPassword: {crypt}x
+gidNumber: 3001" > /tmp/vmtestadmin.ldif
+# Add the Organistion Unit to ldif
+ldapadd -f /tmp/vmtestadmin.ldif -D {{ ldap_rootdn }} -w {{ ldap_root_pass }}
+
+# Create Organisation Unit testadmin posixAccount ldif file
+# password is "test"
+echo "dn: uid=testadmin,ou=People,{{ ldap_suffix }}
+objectClass: top
+objectClass: account
+objectClass: posixAccount
+objectClass: shadowAccount
+cn: testadmin
+uid: testadmin
+uidNumber: 3001
+gidNumber: 3001
+homeDirectory: /home/testadmin
+loginShell: /bin/bash
+userPassword: {SSHA}AEwnVk/vpFPOM6GNhLYMYlYttijc5HvA
+shadowLastChange: 0
+shadowMax: 0
+shadowWarning: 0" > /tmp/testadmin.ldif
+# Add the Organistion Unit to ldif
+ldapadd -f /tmp/testadmin.ldif -D {{ ldap_rootdn }} -w {{ ldap_root_pass }}
+
+# Create modification ldif adding testadmin to vmtestadmin
+echo "dn: cn=vmtestadmin,ou=Groups,{{ ldap_suffix }}
+changetype: modify
+add: memberuid
+memberuid: testadmin" > /tmp/modify.ldif
+# Modify the vmtestadmin group to add xli
+ldapmodify -f /tmp/modify.ldif -x -D {{ ldap_rootdn }} -w {{ ldap_root_pass }}

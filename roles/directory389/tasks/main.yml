@@ -1,0 +1,71 @@
+- name: "Enable 389-ds module"
+  command: dnf module enable -y 389-ds
+  register: result
+  changed_when:
+    - '"Enabling module streams" in result.stdout'
+
+- name: Install Dnf Packages
+  dnf:
+    name:
+      - 389-ds-base
+      - 389-ds-base-devel
+    state: present
+
+- name: Template slapd.conf / ldap.conf
+  template:
+    src: "{{ item.src }}.j2"
+    dest: "{{ item.dest }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - {src: "ldapserver.inf", dest: "/root/ldapserver.inf", owner: "root", group: "root", mode: "600"}
+    - {src: "ldap.conf", dest: "/etc/openldap/ldap.conf", owner: "root", group: "root", mode: "600"}
+
+- name: Create LDAP Service with dscreate
+  shell: sudo dscreate from-file /root/ldapserver.inf
+  args:
+    creates: /var/lib/dirsrv/slapd-ldapserver
+
+- block:
+  - name: Delete current certificate
+    shell: /usr/bin/certutil -D {{ item }} -d /etc/dirsrv/slapd-ldapserver
+    loop:
+    - "Server-Cert"
+    - "Self-Signed-CA"
+    - "SCM Local CA on ccycloud-1.rhel8-softbank-xli.root.hwx.site"
+    failed_when: no
+
+  - name: Get the secret key of AutoTLS
+    slurp:
+      src: /var/lib/cloudera-scm-agent/agent-cert/cm-auto-host_key.pw
+    register: cert_key
+
+  - name: Export Server Cert in p12 format
+    shell: >-
+      openssl pkcs12 -export
+      -inkey /var/lib/cloudera-scm-agent/agent-cert/cm-auto-host_key.pem
+      -in /var/lib/cloudera-scm-agent/agent-cert/cm-auto-host_cert_chain.pem
+      -out /tmp/crt.p12
+      -nodes -name Server-Cert
+      -passin pass:{{ cert_key.content | b64decode }} -passout pass:Temppass
+
+  - name: Import Server Cert
+    shell: >-
+      pk12util -i /tmp/crt.p12
+      -d /etc/dirsrv/slapd-ldapserver
+      -K $(cat /etc/dirsrv/slapd-ldapserver/pin.txt | cut -d':' -f2)
+      -W 'Temppass'
+  tags:
+  - cert
+
+- name: (Re)-start Server
+  shell: sudo dsctl slapd-ldapserver restart
+
+- name: Template the script to add Inventories
+  template:
+    src: "add_ldap_inventories.sh.j2"
+    dest: "/tmp/add_ldap_inventoroies.sh"
+
+- name: Run script
+  shell: /bin/bash /tmp/add_ldap_inventoroies.sh

@@ -1,0 +1,5 @@
+- hosts: ldap_server
+  become: yes
+  gather_facts: no
+  roles:
+  - directory389

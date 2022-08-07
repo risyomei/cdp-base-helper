@@ -1,0 +1,11 @@
+[general]
+
+[slapd]
+instance_name = ldapserver
+root_dn = {{ ldap_rootdn }}
+root_password = {{ ldap_root_pass }}
+self_sign_cert_valid_months = 360
+
+[backend-userroot]
+create_suffix_entry = True
+suffix = {{ ldap_suffix }}
