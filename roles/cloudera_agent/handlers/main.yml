@@ -1,0 +1,5 @@
+---
+- name: "Restart Agent"
+  service:
+    name: cloudera-scm-agent
+    state: restarted

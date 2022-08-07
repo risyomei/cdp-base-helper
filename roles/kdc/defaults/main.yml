@@ -1,0 +1,3 @@
+realm: VMTEST.COM
+admin_princ: "xli/admin@{{ realm }}"
+admin_pass: cloudera

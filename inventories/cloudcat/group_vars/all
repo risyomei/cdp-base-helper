@@ -1,0 +1,11 @@
+cldr_repo_user: ChangeMe
+cldr_repo_pass: ChangeMe
+cldr_manager_version: 7.6.5
+cldr_manager_heap: 3G
+cldr_manager_user: admin
+cldr_manager_pass: admin
+
+# For kerberos
+realm: VMTEST.COM
+admin_princ: "xli/admin@{{ realm }}"
+admin_pass: kdcpass

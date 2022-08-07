@@ -1,0 +1,62 @@
+---
+- name: Add the Cloudera yum repository
+  yum_repository:
+    name: "cloudera-manager"
+    description: "Cloudera Manager Repo"
+    baseurl: "https://{{ cldr_repo_user }}:{{ cldr_repo_pass }}@archive.cloudera.com/p/cm7/{{ cldr_manager_version }}/redhat8/yum"
+    file: 'cloudera-manager'
+    state: present
+    gpgcheck: no
+
+- name: Install the Cloudera-Manager Server
+  yum:
+    name:
+      - "java-1.8.0-openjdk-devel"
+      - "cloudera-manager-daemons-{{ cldr_manager_version }}"
+      - "cloudera-manager-server-{{ cldr_manager_version }}"
+      - "postgresql-jdbc"
+      - "postgresql-jdbc-javadoc"
+    update_cache: yes
+    state: present
+
+- name: Configure Cloudera-Manager Server
+  shell: >-
+    /opt/cloudera/cm/schema/scm_prepare_database.sh
+    -h {{ groups['database'][0] }} -P 5432 postgresql scm scm scm
+  notify: Restart Server
+
+- name: Additional JAVA_Option Tunnings for Large-Scale Cluster
+  lineinfile:
+    path: "/etc/default/cloudera-scm-server"
+    regexp: '^export CMF_JAVA_OPTS'
+    line: 'export CMF_JAVA_OPTS="-Xmx{{ cldr_manager_heap }} -XX:MaxPermSize={{ cldr_manager_heap }} -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp -Dcom.cloudera.server.common.HttpConnectorServer.MAX_HEARTBEAT_PROCESSING_THREADS=32"'
+    create: no
+  notify: Restart Server
+
+- name: Additional DB Tunnings for Large-Scale Cluster
+  ini_file:
+    path: /etc/cloudera-scm-server/db.properties
+    create: no
+    section: null
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+    state: present
+  with_items:
+    - { option: com.cloudera.cmf.orm.hibernate.c3p0.max_size, value: 500 }
+    - { option: com.cloudera.cmf.orm.hibernate.c3p0.min_size, value: 200 }
+    - { option: com.cloudera.cmf.orm.hibernate.c3p0.max_statements, value: 2500 }
+    - { option: com.cloudera.cmf.orm.hibernate.c3p0.idle_test_period, value: 300 }
+    - { option: com.cloudera.cmf.orm.hibernate.c3p0.acquireRetryAttempts, value: 5 }
+    - { option: com.cloudera.cmf.orm.hibernate.c3p0.acquireRetryDelay, value: 1000 }
+    - { option: com.cloudera.cmf.orm.hibernate.c3p0.checkoutTimeout, value: 20000 }
+  notify: Restart Server
+  tags:
+    - never
+    - large_cluster
+
+- name: Make sure the Cloudera-Manager Server service is enabled and Started
+  service:
+    name: cloudera-scm-server
+    enabled: yes
+    state: started
+  ignore_errors: true

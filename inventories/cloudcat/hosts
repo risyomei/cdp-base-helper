@@ -1,0 +1,17 @@
+[database]
+xli-cdp7-base-1.vpc.cloudera.com
+
+[ldap_server]
+xli-cdp7-base-1.vpc.cloudera.com
+
+[kdc]
+xli-cdp7-base-1.vpc.cloudera.com
+
+[cdp_manager]
+xli-cdp7-base-1.vpc.cloudera.com
+
+[cdp_agents]
+xli-cdp7-base-[1:5].vpc.cloudera.com
+
+[dataservice]
+xli-dataservice-[1:5].gce.cloudera.com

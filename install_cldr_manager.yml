@@ -1,0 +1,13 @@
+- hosts: cdp_agents
+  gather_facts: no
+  become: true
+  roles:
+    - cloudera_agent
+
+- hosts: cdp_manager
+  gather_facts: no
+  become: true
+  roles:
+    - cloudera_server
+
+

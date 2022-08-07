@@ -1,0 +1,66 @@
+# Need to install postgresql
+# ansible-galaxy collection install community.postgresql
+- hosts: database
+  gather_facts: no
+  become: true
+  tasks:
+  - name: Install required yum package
+    yum:
+      name:
+      - gcc
+      - python3-devel
+      state: present
+
+  - name: Install psycopg2
+    pip:
+      name: psycopg2-binary
+      state: present
+
+  - name: Create Postgres Users
+    become: yes
+    become_user: postgres
+    community.postgresql.postgresql_user:
+      name: "{{ item.db_user }}"
+      password: "{{ item.pass }}"
+    loop:
+      - { pass: 'scm', db_user: 'scm' }
+      - { pass: 'ranger', db_user: 'ranger' }
+      - { pass: 'rman', db_user: 'rman' }
+      - { pass: 'hive', db_user: 'hive' }
+      - { pass: 'hue', db_user: 'hue' }
+      - { pass: 'das', db_user: 'das' }
+
+  - name: Create Postgres Database
+    become: yes
+    become_user: postgres
+    community.postgresql.postgresql_db:
+      name: "{{ item.db_name }}"
+      owner: "{{ item.db_user }}"
+      state: present
+      login_unix_socket: "/tmp"
+    loop:
+      - {db_name: 'scm', db_user: 'scm'}
+      - {db_name: 'ranger', db_user: 'ranger'}
+      - {db_name: 'rman', db_user: 'rman'}
+      - {db_name: 'metastore', db_user: 'hive'}
+      - {db_name: 'hue', db_user: 'hue'}
+      - {db_name: 'das', db_user: 'das'}
+
+  - name: Drop Postgres Database
+    become: yes
+    become_user: postgres
+    community.postgresql.postgresql_db:
+      name: "{{ item.db_name }}"
+      owner: "{{ item.db_user }}"
+      state: present
+      login_unix_socket: "/tmp"
+    loop:
+      - {db_name: 'scm', db_user: 'scm'}
+      - {db_name: 'ranger', db_user: 'ranger'}
+      - {db_name: 'rman', db_user: 'rman'}
+      - {db_name: 'metastore', db_user: 'hive'}
+      - {db_name: 'hue', db_user: 'hue'}
+      - {db_name: 'das', db_user: 'das'}
+    tags:
+      - never
+      - dropdb

@@ -1,0 +1,34 @@
+- hosts: cdp_manager
+  gather_facts: no
+  become: true
+  tasks:
+  - name: Configure Required Settings for Kerberos
+    uri:
+      url: "http://{{ groups['cdp_manager'] | first }}:7180/api/v44/cm/config"
+      user: "{{ cldr_manager_user }}"
+      password: "{{ cldr_manager_pass }}"
+      method: PUT
+      body:
+        items:
+          - {"name": "kdc_type", "value": "MIT KDC"}
+          - {"name": "krb_enc_types", "value": "aes256-cts aes128-cts rc4-hmac"}
+          - {"name": "kdc_host", "value": "{{ groups['cdp_manager'] | first }}"}
+          - {"name": "security_realm","value": "{{ realm }}"}
+          - {"name": "kdc_admin_host", "value": "{{ groups['cdp_manager'] | first }}"}
+      force_basic_auth: yes
+      body_format: json
+      headers:
+        Content-Type: application/json
+
+  - name: Configure Kerberos Admin
+    uri:
+      url: "http://{{ groups['cdp_manager'] | first }}:7180/api/v44/cm/commands/importAdminCredentials?password={{ admin_pass }}&username={{ admin_princ }}"
+      user: "{{ cldr_manager_user }}"
+      password: "{{ cldr_manager_pass }}"
+      method: POST
+      force_basic_auth: yes
+      headers:
+        Content-Type: application/json
+
+
+

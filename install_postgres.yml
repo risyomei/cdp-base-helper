@@ -1,0 +1,48 @@
+- hosts: database
+  gather_facts: no
+  become: true
+  tasks:
+  - name: Install Required Package
+    yum:
+      name:
+        - postgresql
+        - postgresql-server
+        - postgresql-contrib
+        - postgresql-libs
+        - postgresql-devel
+      state: present
+
+  - name: Initiailize Postgres DB
+    shell: "postgresql-setup initdb"
+    args:
+      creates: /var/lib/pgsql/data/pg_hba.conf
+
+  - name: Update Postgres Configuration (pg_hba.conf)
+    lineinfile:
+      path: "/var/lib/pgsql/data/pg_hba.conf"
+      line: 'host all all 0.0.0.0/0 md5'
+      create: no
+
+  - name: Update Postgres Configuration (postgresql.conf)
+    ini_file:
+      path: '/var/lib/pgsql/data/postgresql.conf'
+      create: no
+      section: null
+      option: "{{ item.option }}"
+      value: "{{ item.value }}"
+      state: present
+    with_items:
+      - { option: listen_addresses, value: "'*'" }
+      - { option: max_connections, value: 400 }
+      - { option: shared_buffers, value: 256MB }
+      - { option: wal_buffers, value: 8MB }
+      - { option: max_wal_size, value: 1GB }
+      - { option: min_wal_size, value: 80MB }
+      - { option: checkpoint_completion_target, value: 0.9 }
+
+  - name: Enable / Start Postgresql
+    service:
+      name: postgresql
+      state: restarted
+      enabled: yes
+

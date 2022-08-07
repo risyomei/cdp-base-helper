@@ -1,0 +1,40 @@
+---
+- name: Add the Cloudera yum repository
+  yum_repository:
+    name: "cloudera-manager"
+    description: "Cloudera Manager Repo"
+    baseurl: "https://{{ cldr_repo_user }}:{{ cldr_repo_pass }}@archive.cloudera.com/p/cm7/{{ cldr_manager_version }}/redhat8/yum"
+    file: 'cloudera-manager'
+    state: present
+    gpgcheck: no
+
+- name: Install the Cloudera-Manager Agent
+  yum:
+    name:
+      - "java-1.8.0-openjdk-devel"
+      - "cloudera-manager-daemons-{{ cldr_manager_version }}"
+      - "cloudera-manager-agent-{{ cldr_manager_version }}"
+      - "postgresql-jdbc"
+      - "postgresql-jdbc-javadoc"
+    update_cache: yes
+    state: present
+  notify: "Restart Agent"
+
+- name: Configure Cloudera Manager Agents
+  ini_file:
+    path: /etc/cloudera-scm-agent/config.ini
+    create: no
+    section: "{{ item.section }}"
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+    state: present
+  with_items:
+    - { section: "General", option: "server_host", value: "{{ groups['cdp_manager'][0] }}" }
+  notify: "Restart Agent"
+
+- name: Make sure the ambari-agent service is Enabled and Started
+  service:
+    name: cloudera-scm-agent
+    enabled: yes
+    state: started
+  ignore_errors: true

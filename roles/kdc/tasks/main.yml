@@ -1,0 +1,54 @@
+---
+- name: Install Required Package
+  become: yes
+  yum:
+    name:
+      - krb5-server
+      - krb5-libs
+      - krb5-workstation
+    state: present
+
+- name: Copy Required File
+  become: yes
+  template:
+    src: "{{ item.fname }}.j2"
+    dest: "{{ item.path }}"
+  loop:
+    - {fname: "kadm5.acl", path: "/var/kerberos/krb5kdc/kadm5.acl" }
+    - {fname: "kdc.conf", path: "/var/kerberos/krb5kdc/kdc.conf" }
+
+- name: Create krb5.conf
+  template:
+    src: "krb5.conf.j2"
+    dest: "/etc/krb5.conf"
+
+- name: Create Kerberos Realm
+  shell: "/usr/sbin/kdb5_util create -s -r {{ realm }} -P master_key_pass"
+  args:
+    creates: "/var/kerberos/krb5kdc/principal"
+
+- name: Enable Kadmin/krb5kdc
+  service:
+    name: "{{ item }}"
+    state: restarted
+    enabled: true
+  loop:
+    - krb5kdc
+    - kadmin
+
+- name: Check Kadmin User is Created
+  shell: "kadmin.local -q 'listprincs' | grep {{ admin_princ }}"
+  register: created
+  changed_when: no
+  failed_when: no
+  tags: test
+
+- name: Create Kadmin User
+  shell: "kadmin.local  -q 'addprinc -pw {{ admin_pass }} {{ admin_princ }}'"
+  when: created != 0
+  tags: test
+
+- name: Confirm Kadmin User is Created
+  shell: "kadmin.local -q 'listprincs' | grep {{ admin_princ }}"
+  changed_when: no
+  tags: test

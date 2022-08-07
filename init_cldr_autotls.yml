@@ -1,0 +1,27 @@
+- hosts: cdp_manager
+  gather_facts: no
+  become: true
+  tasks:
+  - name: Configure Required Settings for Kerberos
+    no_log: false
+    uri:
+      url: "http://{{ groups['cdp_manager'] | first }}:7180/api/v44/cm/commands/generateCmca"
+      user: "{{ cldr_manager_user }}"
+      password: "{{ cldr_manager_pass }}"
+      method: POST
+      body:
+        "configureAllServices": "true"
+        "sshPort": 22
+        "userName": "root"
+        "password": "cloudera"
+      force_basic_auth: yes
+      body_format: json
+      validate_certs: no
+      headers:
+        Content-Type: application/json
+
+  - name: Make sure the Cloudera-Manager Server service is enabled and Started
+    service:
+      name: cloudera-scm-server
+      enabled: yes
+      state: restarted
