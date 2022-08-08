@@ -1,17 +1,67 @@
 [database]
-xli-cdp7-base-1.vpc.cloudera.com
+ccycloud-1.xli-cdpbase.root.hwx.site
 
 [ldap_server]
-xli-cdp7-base-1.vpc.cloudera.com
+ccycloud-1.xli-cdpbase.root.hwx.site
 
 [kdc]
-xli-cdp7-base-1.vpc.cloudera.com
+ccycloud-1.xli-cdpbase.root.hwx.site
 
 [cdp_manager]
-xli-cdp7-base-1.vpc.cloudera.com
+ccycloud-1.xli-cdpbase.root.hwx.site
 
-[cdp_agents]
-xli-cdp7-base-[1:5].vpc.cloudera.com
+[node1:children]
+cdp_manager
+
+[node2]
+ccycloud-2.xli-cdpbase.root.hwx.site
+
+[node3]
+ccycloud-3.xli-cdpbase.root.hwx.site
+
+[node4]
+ccycloud-4.xli-cdpbase.root.hwx.site
+
+[node5]
+ccycloud-5.xli-cdpbase.root.hwx.site
 
 [dataservice]
 xli-dataservice-[1:5].gce.cloudera.com
+
+#
+# Used for CDP Tempalte
+#
+[cdp_agents:children]
+node1
+node2
+node3
+node4
+node5
+dataservice
+
+#
+# Topology Explanation
+#
+# Node1:
+# "das-DAS_EVENT_PROCESSOR-BASE", "das-DAS_WEBAPP-BASE", "hive_on_tez-GATEWAY-BASE", "tez-GATEWAY-BASE"
+#
+# Node2
+# "hdfs-FAILOVERCONTROLLER-BASE", "hdfs-JOURNALNODE-BASE", "hdfs-NAMENODE-1", "hive_on_tez-GATEWAY-BASE",
+# "impala-CATALOGSERVER-BASE", "impala-STATESTORE-BASE", "ranger-RANGER_ADMIN-BASE", "ranger-RANGER_TAGSYNC-BASE",
+# "ranger-RANGER_USERSYNC-BASE", "tez-GATEWAY-BASE", "yarn-RESOURCEMANAGER-BASE", "zookeeper-SERVER-BASE"
+#
+# Node3
+# "hbase-MASTER-BASE", "hbase-REGIONSERVER-BASE", "hdfs-DATANODE-BASE", "hdfs-FAILOVERCONTROLLER-BASE"
+# "hdfs-JOURNALNODE-BASE", "hdfs-NAMENODE-1", "hive-HIVEMETASTORE-BASE", "hive_on_tez-GATEWAY-BASE"
+# "hive_on_tez-HIVESERVER2-BASE", "impala-IMPALAD-BASE", "kafka-KAFKA_BROKER-BASE", "tez-GATEWAY-BASE"
+# "yarn-JOBHISTORY-BASE", "yarn-NODEMANAGER-BASE", "yarn-RESOURCEMANAGER-BASE", "zookeeper-SERVER-BASE"
+#
+# Node4
+# "hbase-REGIONSERVER-BASE", "hdfs-DATANODE-BASE", "hdfs-JOURNALNODE-BASE", "hive-HIVEMETASTORE-BASE"
+# "hive_on_tez-GATEWAY-BASE", "hive_on_tez-HIVESERVER2-BASE", "hue-HUE_SERVER-BASE", "hue-KT_RENEWER-BASE"
+# "impala-IMPALAD-BASE", "kafka-KAFKA_BROKER-BASE", "solr-SOLR_SERVER-BASE", "tez-GATEWAY-BASE", "yarn-NODEMANAGER-BASE"
+# "zookeeper-SERVER-BASE"
+#
+# Node5
+# "atlas-ATLAS_SERVER-BASE", "hbase-REGIONSERVER-BASE", "hdfs-DATANODE-BASE", "hive_on_tez-GATEWAY-BASE"
+# "impala-IMPALAD-BASE", "kafka-KAFKA_BROKER-BASE", "tez-GATEWAY-BASE", "yarn-NODEMANAGER-BASE"

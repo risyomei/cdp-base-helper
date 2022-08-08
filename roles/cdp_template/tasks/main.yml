@@ -1,0 +1,25 @@
+---
+- name: Remove Residues from Hosts
+  shell: "rm -rfv /dfs/* /var/lib/zookeeper/* /var/local/kafka/*"
+  failed_when: no
+
+- name: Create CDP7 Template
+  template:
+    src: "cdp_base_template.json.j2"
+    dest: "/tmp/template.json"
+
+- name: Deploy Template with API
+  no_log: false
+  uri:
+    url: "https://{{ groups['cdp_manager'] | first }}:7183/api/v44/cm/importClusterTemplate"
+    user: "{{ cldr_manager_user }}"
+    password: "{{ cldr_manager_pass }}"
+    method: POST
+    src: '/tmp/template.json'
+    remote_src: yes
+    force_basic_auth: yes
+    body_format: json
+    validate_certs: no
+    follow_redirects: yes
+    headers:
+      Content-Type: application/json

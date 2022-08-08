@@ -56,9 +56,21 @@
       - { option: ssl_key_file, value: "'server.key'" }
       - { option: ssl_ca_file, value: "'cm-auto-global_cacerts.pem'" }
 
+  - name: Stop ClouderaManager Server (if any)
+    service:
+      name: cloudera-scm-server
+      state: stopped
+    failed_when: no
+
   - name: Enable / Start Postgresql
     service:
       name: postgresql
       state: restarted
       enabled: yes
+
+  - name: Start ClouderaManager Server (if any)
+    service:
+      name: cloudera-scm-server
+      state: started
+    failed_when: no
 

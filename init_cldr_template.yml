@@ -1,0 +1,6 @@
+- hosts: cdp_manager
+  gather_facts: no
+  become: true
+  roles:
+    - cdp_template
+
