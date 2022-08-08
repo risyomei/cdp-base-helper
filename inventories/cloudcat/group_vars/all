@@ -1,13 +1,20 @@
+#
 # Must Change Section
+#
 cldr_repo_user: changeme
 cldr_repo_pass: changeme
 
-# You can keep the following values as default
+#
+#  You can keep the following values as default
+#
 cldr_manager_version: 7.6.5
 cldr_manager_heap: 3G
 realm: VMTEST.COM
 admin_princ: "xli/admin@{{ realm }}"
 admin_pass: kdcpass
+
+# For Cluster Template
+cluster_name: cdp-base-xli
 
 # These values are not applied by Playbook
 cldr_manager_user: admin

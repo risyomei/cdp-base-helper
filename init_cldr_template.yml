@@ -1,0 +1,6 @@
+- hosts: xli-cdp7-base-1.vpc.cloudera.com
+  gather_facts: no
+  become: true
+  roles:
+    - cdp_template
+

@@ -1,0 +1,5 @@
+---
+- name: Create krb5.conf
+  template:
+    src: "cdp_base_template.json.j2"
+    dest: "/tmp/template.json"

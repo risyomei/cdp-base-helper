@@ -1,0 +1,9 @@
+das_dbpass: das
+hive_dbpass: hive
+hue_dbpass: hue
+ranger_dbpass: ranger
+
+ranger_keyadmin_pass: Ranger1@#
+ranger_admin_pass: Ranger1@#
+ranger_usersync_pass: Ranger1@#
+ranger_tagsync_pass: Ranger1@#
