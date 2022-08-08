@@ -15,6 +15,7 @@
         "userName": "root"
         "password": "cloudera"
       force_basic_auth: yes
+      follow_redirects: yes
       body_format: json
       validate_certs: no
       headers:

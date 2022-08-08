@@ -1,29 +1,29 @@
 [database]
-xli-cdp7-base-1.vpc.cloudera.com
+ccycloud-1.xli-cdpbase.root.hwx.site
 
 [ldap_server]
-xli-cdp7-base-1.vpc.cloudera.com
+ccycloud-1.xli-cdpbase.root.hwx.site
 
 [kdc]
-xli-cdp7-base-1.vpc.cloudera.com
+ccycloud-1.xli-cdpbase.root.hwx.site
 
 [cdp_manager]
-xli-cdp7-base-1.vpc.cloudera.com
+ccycloud-1.xli-cdpbase.root.hwx.site
 
 [node1:children]
 cdp_manager
 
 [node2]
-xli-cdp7-base-2.vpc.cloudera.com
+ccycloud-2.xli-cdpbase.root.hwx.site
 
 [node3]
-xli-cdp7-base-3.vpc.cloudera.com
+ccycloud-3.xli-cdpbase.root.hwx.site
 
 [node4]
-xli-cdp7-base-4.vpc.cloudera.com
+ccycloud-4.xli-cdpbase.root.hwx.site
 
 [node5]
-xli-cdp7-base-5.vpc.cloudera.com
+ccycloud-5.xli-cdpbase.root.hwx.site
 
 [dataservice]
 xli-dataservice-[1:5].gce.cloudera.com

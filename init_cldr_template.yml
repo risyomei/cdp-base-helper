@@ -1,4 +1,4 @@
-- hosts: xli-cdp7-base-1.vpc.cloudera.com
+- hosts: cdp_manager
   gather_facts: no
   become: true
   roles:

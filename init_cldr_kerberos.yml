@@ -16,6 +16,7 @@
           - {"name": "security_realm","value": "{{ realm }}"}
           - {"name": "kdc_admin_host", "value": "{{ groups['cdp_manager'] | first }}"}
       force_basic_auth: yes
+      follow_redirects: yes
       body_format: json
       headers:
         Content-Type: application/json
@@ -27,6 +28,7 @@
       password: "{{ cldr_manager_pass }}"
       method: POST
       force_basic_auth: yes
+      follow_redirects: yes
       headers:
         Content-Type: application/json
 
