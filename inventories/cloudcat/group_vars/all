@@ -3,6 +3,9 @@
 #
 cldr_repo_user: changeme
 cldr_repo_pass: changeme
+dns_forwarder: changeme
+zone_name: changeme.foo.bar.com
+ecs_server_ip: changeme
 
 #
 #  You can keep the following values as default

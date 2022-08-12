@@ -1,0 +1,14 @@
+- hosts: dns
+  become: true
+  roles:
+    - dns
+
+- hosts: all
+  become: true
+  tasks:
+  - name: Update Resolve Configuration to Use the Newly setup DNS
+    lineinfile:
+      path: /etc/resolv.conf
+      insertafter: 'search'
+      line: "nameserver {{ hostvars[groups['dns'][0]]['ansible_default_ipv4']['address'] }}"
+      unsafe_writes: yes

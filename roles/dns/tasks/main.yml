@@ -1,0 +1,19 @@
+---
+- name: Install Required Package
+  yum:
+    name:
+      - bind
+    state: present
+
+- name: Copy Required File
+  template:
+    src: "{{ item.fname }}.j2"
+    dest: "{{ item.path }}"
+  loop:
+    - {fname: "named.conf", path: "/etc/named.conf" }
+    - {fname: "customized.zone", path: "/var/named/customized.zone" }
+
+- name: Restart named
+  service:
+    name: named
+    state: restarted
