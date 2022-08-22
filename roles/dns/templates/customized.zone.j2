@@ -7,5 +7,5 @@ $TTL      86400
                                         3600000    ; Expire
                                         86400 )    ; Minimum
           IN       NS      dns.{{ zone_name }}.
-dns       IN       A       {{ ecs_server_ip }}
+dns       IN       A       {{ hostvars[groups['dns'][0]]['ansible_default_ipv4']['address'] }}
 *         IN       A       {{ ecs_server_ip }}

@@ -51,7 +51,7 @@
       value: "{{ item.value }}"
       state: present
     with_items:
-      - { option: ssl, value: on }
+      - { option: ssl, value: 'on' }
       - { option: ssl_cert_file, value: "'cm-auto-host_cert_chain.pem'" }
       - { option: ssl_key_file, value: "'server.key'" }
       - { option: ssl_ca_file, value: "'cm-auto-global_cacerts.pem'" }
@@ -61,6 +61,7 @@
       name: cloudera-scm-server
       state: stopped
     failed_when: no
+    tags: stop_cm
 
   - name: Enable / Start Postgresql
     service:
@@ -73,4 +74,5 @@
       name: cloudera-scm-server
       state: started
     failed_when: no
+    tags: stop_cm
 

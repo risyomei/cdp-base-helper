@@ -8,6 +8,52 @@
     "product" : "CDH"
   } ],
   "services" : [ {
+      "refName" : "ozone",
+      "serviceType" : "OZONE",
+      "serviceConfigs" : [ {
+        "name" : "ranger_service",
+        "ref" : "ranger"
+      }, {
+        "name" : "hdfs_service",
+        "ref" : "hdfs"
+      }, {
+        "name" : "ozone.service.id",
+        "value" : "cdp-ozone"
+      } ],
+      "roleConfigGroups" : [ {
+        "refName" : "ozone-GATEWAY-BASE",
+        "roleType" : "GATEWAY",
+        "base" : true
+      }, {
+        "refName" : "ozone-OZONE_RECON-BASE",
+        "roleType" : "OZONE_RECON",
+        "base" : true
+      }, {
+        "refName" : "ozone-STORAGE_CONTAINER_MANAGER-BASE",
+        "roleType" : "STORAGE_CONTAINER_MANAGER",
+        "base" : true
+      }, {
+        "refName" : "ozone-OZONE_DATANODE-BASE",
+        "roleType" : "OZONE_DATANODE",
+        "configs" : [ {
+          "name" : "ozone_datanode_heap_size",
+          "value" : "2048"
+        } ],
+        "base" : true
+      }, {
+        "refName" : "ozone-S3_GATEWAY-BASE",
+        "roleType" : "S3_GATEWAY",
+        "base" : true
+      }, {
+        "refName" : "ozone-OZONE_MANAGER-BASE",
+        "roleType" : "OZONE_MANAGER",
+        "configs" : [ {
+          "name" : "om_max_heap_size",
+          "value" : "512"
+        } ],
+        "base" : true
+      } ]
+    }, {
     "refName" : "tez",
     "serviceType" : "TEZ",
     "serviceConfigs" : [ {
@@ -330,23 +376,23 @@
   "hostTemplates" : [{
     "refName" : "HostTemplate-1-from-master1",
     "cardinality" : 1,
-    "roleConfigGroupsRefNames" : [ "das-DAS_EVENT_PROCESSOR-BASE", "das-DAS_WEBAPP-BASE", "hive_on_tez-GATEWAY-BASE", "tez-GATEWAY-BASE" ]
+    "roleConfigGroupsRefNames" : [ "das-DAS_EVENT_PROCESSOR-BASE", "das-DAS_WEBAPP-BASE", "hive_on_tez-GATEWAY-BASE", "tez-GATEWAY-BASE", "ozone-GATEWAY-BASE" ]
   }, {
     "refName" : "HostTemplate-2-from-master2",
     "cardinality" : 1,
-    "roleConfigGroupsRefNames" : [ "hdfs-FAILOVERCONTROLLER-BASE", "hdfs-JOURNALNODE-BASE", "hdfs-NAMENODE-1", "hive_on_tez-GATEWAY-BASE", "impala-CATALOGSERVER-BASE", "impala-STATESTORE-BASE", "ranger-RANGER_ADMIN-BASE", "ranger-RANGER_TAGSYNC-BASE", "ranger-RANGER_USERSYNC-BASE", "tez-GATEWAY-BASE", "yarn-RESOURCEMANAGER-BASE", "zookeeper-SERVER-BASE" ]
+    "roleConfigGroupsRefNames" : [ "hdfs-FAILOVERCONTROLLER-BASE", "hdfs-JOURNALNODE-BASE", "hdfs-NAMENODE-1", "hive_on_tez-GATEWAY-BASE", "impala-CATALOGSERVER-BASE", "impala-STATESTORE-BASE", "ranger-RANGER_ADMIN-BASE", "ranger-RANGER_TAGSYNC-BASE", "ranger-RANGER_USERSYNC-BASE", "tez-GATEWAY-BASE", "yarn-RESOURCEMANAGER-BASE", "zookeeper-SERVER-BASE", "ozone-GATEWAY-BASE", "ozone-OZONE_RECON-BASE", "ozone-S3_GATEWAY-BASE", "ozone-STORAGE_CONTAINER_MANAGER-BASE" ]
   }, {
     "refName" : "HostTemplate-3-from-master3",
     "cardinality" : 1,
-    "roleConfigGroupsRefNames" : [ "hbase-MASTER-BASE", "hbase-REGIONSERVER-BASE", "hdfs-DATANODE-BASE", "hdfs-FAILOVERCONTROLLER-BASE", "hdfs-JOURNALNODE-BASE", "hdfs-NAMENODE-1", "hive-HIVEMETASTORE-BASE", "hive_on_tez-GATEWAY-BASE", "hive_on_tez-HIVESERVER2-BASE", "impala-IMPALAD-BASE", "kafka-KAFKA_BROKER-BASE", "tez-GATEWAY-BASE", "yarn-JOBHISTORY-BASE", "yarn-NODEMANAGER-BASE", "yarn-RESOURCEMANAGER-BASE", "zookeeper-SERVER-BASE" ]
+    "roleConfigGroupsRefNames" : [ "hbase-MASTER-BASE", "hbase-REGIONSERVER-BASE", "hdfs-DATANODE-BASE", "hdfs-FAILOVERCONTROLLER-BASE", "hdfs-JOURNALNODE-BASE", "hdfs-NAMENODE-1", "hive-HIVEMETASTORE-BASE", "hive_on_tez-GATEWAY-BASE", "hive_on_tez-HIVESERVER2-BASE", "impala-IMPALAD-BASE", "kafka-KAFKA_BROKER-BASE", "tez-GATEWAY-BASE", "yarn-JOBHISTORY-BASE", "yarn-NODEMANAGER-BASE", "yarn-RESOURCEMANAGER-BASE", "zookeeper-SERVER-BASE", "ozone-GATEWAY-BASE", "ozone-OZONE_DATANODE-BASE", "ozone-OZONE_MANAGER-BASE" ]
   }, {
     "refName" : "HostTemplate-4-from-master4",
     "cardinality" : 1,
-    "roleConfigGroupsRefNames" : [ "hbase-REGIONSERVER-BASE", "hdfs-DATANODE-BASE", "hdfs-JOURNALNODE-BASE", "hive-HIVEMETASTORE-BASE", "hive_on_tez-GATEWAY-BASE", "hive_on_tez-HIVESERVER2-BASE", "hue-HUE_SERVER-BASE", "hue-KT_RENEWER-BASE", "impala-IMPALAD-BASE", "kafka-KAFKA_BROKER-BASE", "solr-SOLR_SERVER-BASE", "tez-GATEWAY-BASE", "yarn-NODEMANAGER-BASE", "zookeeper-SERVER-BASE" ]
+    "roleConfigGroupsRefNames" : [ "hbase-REGIONSERVER-BASE", "hdfs-DATANODE-BASE", "hdfs-JOURNALNODE-BASE", "hive-HIVEMETASTORE-BASE", "hive_on_tez-GATEWAY-BASE", "hive_on_tez-HIVESERVER2-BASE", "hue-HUE_SERVER-BASE", "hue-KT_RENEWER-BASE", "impala-IMPALAD-BASE", "kafka-KAFKA_BROKER-BASE", "solr-SOLR_SERVER-BASE", "tez-GATEWAY-BASE", "yarn-NODEMANAGER-BASE", "zookeeper-SERVER-BASE", "ozone-GATEWAY-BASE", "ozone-OZONE_DATANODE-BASE", "ozone-OZONE_MANAGER-BASE" ]
   }, {
     "refName" : "HostTemplate-5-from-master5",
     "cardinality" : 1,
-    "roleConfigGroupsRefNames" : [ "atlas-ATLAS_SERVER-BASE", "hbase-REGIONSERVER-BASE", "hdfs-DATANODE-BASE", "hive_on_tez-GATEWAY-BASE", "impala-IMPALAD-BASE", "kafka-KAFKA_BROKER-BASE", "tez-GATEWAY-BASE", "yarn-NODEMANAGER-BASE" ]
+    "roleConfigGroupsRefNames" : [ "atlas-ATLAS_SERVER-BASE", "hbase-REGIONSERVER-BASE", "hdfs-DATANODE-BASE", "hive_on_tez-GATEWAY-BASE", "impala-IMPALAD-BASE", "kafka-KAFKA_BROKER-BASE", "tez-GATEWAY-BASE", "yarn-NODEMANAGER-BASE", "ozone-GATEWAY-BASE", "ozone-OZONE_DATANODE-BASE", "ozone-OZONE_MANAGER-BASE" ]
   }],
   "instantiator" : {
     "clusterName" : "{{ cluster_name }}",

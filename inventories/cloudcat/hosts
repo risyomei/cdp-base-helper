@@ -1,20 +1,5 @@
-[dns]
+[node1]
 ccycloud-1.xli-cdpbase.root.hwx.site
-
-[database]
-ccycloud-1.xli-cdpbase.root.hwx.site
-
-[ldap_server]
-ccycloud-1.xli-cdpbase.root.hwx.site
-
-[kdc]
-ccycloud-1.xli-cdpbase.root.hwx.site
-
-[cdp_manager]
-ccycloud-1.xli-cdpbase.root.hwx.site
-
-[node1:children]
-cdp_manager
 
 [node2]
 ccycloud-2.xli-cdpbase.root.hwx.site
@@ -28,8 +13,22 @@ ccycloud-4.xli-cdpbase.root.hwx.site
 [node5]
 ccycloud-5.xli-cdpbase.root.hwx.site
 
-[dataservice]
-xli-dataservice-[1:5].gce.cloudera.com
+# In the hands on session, DNS Server, Postgres Server, LDAP Server,
+# KDC Server, will be co-exists with ClouderaManager,
+[dns:children]
+node1
+
+[database:children]
+node1
+
+[ldap_server:children]
+node1
+
+[kdc:children]
+node1
+
+[cdp_manager:children]
+node1
 
 #
 # Used for CDP Tempalte
@@ -40,31 +39,34 @@ node2
 node3
 node4
 node5
-dataservice
 
 #
 # Topology Explanation
 #
+
 # Node1:
-# "das-DAS_EVENT_PROCESSOR-BASE", "das-DAS_WEBAPP-BASE", "hive_on_tez-GATEWAY-BASE", "tez-GATEWAY-BASE"
-#
+# "das-DAS_EVENT_PROCESSOR-BASE", "das-DAS_WEBAPP-BASE", "hive_on_tez-GATEWAY-BASE", "tez-GATEWAY-BASE", "ozone-GATEWAY-BASE"
+
 # Node2
 # "hdfs-FAILOVERCONTROLLER-BASE", "hdfs-JOURNALNODE-BASE", "hdfs-NAMENODE-1", "hive_on_tez-GATEWAY-BASE",
 # "impala-CATALOGSERVER-BASE", "impala-STATESTORE-BASE", "ranger-RANGER_ADMIN-BASE", "ranger-RANGER_TAGSYNC-BASE",
-# "ranger-RANGER_USERSYNC-BASE", "tez-GATEWAY-BASE", "yarn-RESOURCEMANAGER-BASE", "zookeeper-SERVER-BASE"
-#
+# "ranger-RANGER_USERSYNC-BASE", "tez-GATEWAY-BASE", "yarn-RESOURCEMANAGER-BASE", "zookeeper-SERVER-BASE",
+# "ozone-OZONE_RECON-BASE", "ozone-S3_GATEWAY-BASE", "ozone-STORAGE_CONTAINER_MANAGER-BASE"
+
 # Node3
-# "hbase-MASTER-BASE", "hbase-REGIONSERVER-BASE", "hdfs-DATANODE-BASE", "hdfs-FAILOVERCONTROLLER-BASE"
-# "hdfs-JOURNALNODE-BASE", "hdfs-NAMENODE-1", "hive-HIVEMETASTORE-BASE", "hive_on_tez-GATEWAY-BASE"
-# "hive_on_tez-HIVESERVER2-BASE", "impala-IMPALAD-BASE", "kafka-KAFKA_BROKER-BASE", "tez-GATEWAY-BASE"
-# "yarn-JOBHISTORY-BASE", "yarn-NODEMANAGER-BASE", "yarn-RESOURCEMANAGER-BASE", "zookeeper-SERVER-BASE"
-#
+# "hbase-MASTER-BASE", "hbase-REGIONSERVER-BASE", "hdfs-DATANODE-BASE", "hdfs-FAILOVERCONTROLLER-BASE",
+# "hdfs-JOURNALNODE-BASE", "hdfs-NAMENODE-1", "hive-HIVEMETASTORE-BASE", "hive_on_tez-GATEWAY-BASE",
+# "hive_on_tez-HIVESERVER2-BASE", "impala-IMPALAD-BASE", "kafka-KAFKA_BROKER-BASE", "tez-GATEWAY-BASE",
+# "yarn-JOBHISTORY-BASE", "yarn-NODEMANAGER-BASE", "yarn-RESOURCEMANAGER-BASE", "zookeeper-SERVER-BASE",
+# "ozone-GATEWAY-BASE", "ozone-OZONE_DATANODE-BASE", "ozone-OZONE_MANAGER-BASE"
+
 # Node4
-# "hbase-REGIONSERVER-BASE", "hdfs-DATANODE-BASE", "hdfs-JOURNALNODE-BASE", "hive-HIVEMETASTORE-BASE"
-# "hive_on_tez-GATEWAY-BASE", "hive_on_tez-HIVESERVER2-BASE", "hue-HUE_SERVER-BASE", "hue-KT_RENEWER-BASE"
-# "impala-IMPALAD-BASE", "kafka-KAFKA_BROKER-BASE", "solr-SOLR_SERVER-BASE", "tez-GATEWAY-BASE", "yarn-NODEMANAGER-BASE"
-# "zookeeper-SERVER-BASE"
-#
+# "hbase-REGIONSERVER-BASE", "hdfs-DATANODE-BASE", "hdfs-JOURNALNODE-BASE", "hive-HIVEMETASTORE-BASE",
+# "hive_on_tez-GATEWAY-BASE", "hive_on_tez-HIVESERVER2-BASE", "hue-HUE_SERVER-BASE", "hue-KT_RENEWER-BASE",
+# "impala-IMPALAD-BASE", "kafka-KAFKA_BROKER-BASE", "solr-SOLR_SERVER-BASE", "tez-GATEWAY-BASE", "yarn-NODEMANAGER-BASE",
+# "zookeeper-SERVER-BASE", "ozone-GATEWAY-BASE", "ozone-OZONE_DATANODE-BASE", "ozone-OZONE_MANAGER-BASE"
+
 # Node5
-# "atlas-ATLAS_SERVER-BASE", "hbase-REGIONSERVER-BASE", "hdfs-DATANODE-BASE", "hive_on_tez-GATEWAY-BASE"
-# "impala-IMPALAD-BASE", "kafka-KAFKA_BROKER-BASE", "tez-GATEWAY-BASE", "yarn-NODEMANAGER-BASE"
+# "atlas-ATLAS_SERVER-BASE", "hbase-REGIONSERVER-BASE", "hdfs-DATANODE-BASE", "hive_on_tez-GATEWAY-BASE",
+# "impala-IMPALAD-BASE", "kafka-KAFKA_BROKER-BASE", "tez-GATEWAY-BASE", "yarn-NODEMANAGER-BASE",
+# "ozone-GATEWAY-BASE", "ozone-OZONE_DATANODE-BASE", "ozone-OZONE_MANAGER-BASE"

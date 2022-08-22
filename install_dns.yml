@@ -6,9 +6,25 @@
 - hosts: all
   become: true
   tasks:
+  - name: Disable Immutable Flag
+    file:
+      path: "/etc/resolv.conf"
+      attr: "-i"
+    tags:
+      - immutable
+
   - name: Update Resolve Configuration to Use the Newly setup DNS
     lineinfile:
       path: /etc/resolv.conf
       insertafter: 'search'
       line: "nameserver {{ hostvars[groups['dns'][0]]['ansible_default_ipv4']['address'] }}"
       unsafe_writes: yes
+    tags:
+      - resolvensibe
+
+  - name: Enable Immutable Flag
+    file:
+      path: "/etc/resolv.conf"
+      attr: "+i"
+    tags:
+      - immutable

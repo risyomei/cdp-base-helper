@@ -3,9 +3,12 @@
 #
 cldr_repo_user: changeme
 cldr_repo_pass: changeme
-dns_forwarder: changeme
-zone_name: changeme.foo.bar.com
-ecs_server_ip: changeme
+
+# For install_dns.yml
+dns_forwarder: ['0.0.0.0']
+dns_reverse_forwarder: ['0.0.0.0']
+zone_name: apps.xli-dataservice-1.gce.cloudera.com
+ecs_server_ip: 0.0.0.0
 
 #
 #  You can keep the following values as default

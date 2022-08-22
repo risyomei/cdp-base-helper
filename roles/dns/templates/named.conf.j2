@@ -17,7 +17,11 @@ options {
         secroots-file   "/var/named/data/named.secroots";
         recursing-file  "/var/named/data/named.recursing";
         allow-query     { localhost; 0.0.0.0/0; };
-        forwarders      { {{ dns_forwarder }}; };
+        forwarders      {
+{% for ip in dns_forwarder %}
+                          {{ ip }};
+{% endfor %}
+        };
 
         /*
          - If you are building an AUTHORITATIVE DNS server, do NOT enable recursion.
@@ -53,6 +57,16 @@ logging {
 zone "{{ zone_name }}" IN {
         file "customized.zone";
         type master;
+};
+
+zone "in-addr.arpa" {
+    type forward;
+    forward only;
+    forwarders {
+{% for ip in dns_reverse_forwarder %}
+      {{ ip }};
+{% endfor %}
+    };
 };
 
 zone "." IN {
