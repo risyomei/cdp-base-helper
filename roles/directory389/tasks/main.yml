@@ -29,11 +29,11 @@
 
 - block:
   - name: Delete current certificate
-    shell: /usr/bin/certutil -D {{ item }} -d /etc/dirsrv/slapd-ldapserver
+    shell: /usr/bin/certutil -D -n {{ item }} -d /etc/dirsrv/slapd-ldapserver
     loop:
     - "Server-Cert"
     - "Self-Signed-CA"
-    - "SCM Local CA on ccycloud-1.rhel8-softbank-xli.root.hwx.site"
+    - "SCM Local CA on {{ groups['ldap_server'] | first }}"
     failed_when: no
 
   - name: Get the secret key of AutoTLS
